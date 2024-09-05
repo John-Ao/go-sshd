@@ -3,16 +3,17 @@
 
 // NOTE: pty.Start() is not supported in Windows
 
-package handy_sshd
+package server
 
 import (
-	"github.com/creack/pty"
-	"github.com/pkg/errors"
-	"golang.org/x/crypto/ssh"
 	"io"
 	"os"
 	"os/exec"
 	"sync"
+
+	"github.com/creack/pty"
+	"github.com/pkg/errors"
+	"golang.org/x/crypto/ssh"
 )
 
 func (s *Server) createPty(shell string, connection ssh.Channel) (*os.File, error) {

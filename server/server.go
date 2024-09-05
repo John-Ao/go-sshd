@@ -5,7 +5,7 @@
 // Released under the MIT License
 // https://github.com/jpillora/sshd-lite/tree/master#mit-license
 
-package handy_sshd
+package server
 
 import (
 	"crypto/rand"
@@ -14,17 +14,19 @@ import (
 	"encoding/binary"
 	"encoding/pem"
 	"fmt"
-	"github.com/mattn/go-shellwords"
-	"github.com/nwtgck/handy-sshd/sync_generics"
-	"github.com/pkg/sftp"
-	"golang.org/x/crypto/ssh"
-	"golang.org/x/exp/slog"
 	"io"
 	"net"
 	"os"
 	"os/exec"
 	"strconv"
 	"sync"
+
+	"github.com/John-Ao/go-sshd/sync_generics"
+
+	"github.com/mattn/go-shellwords"
+	"github.com/pkg/sftp"
+	"golang.org/x/crypto/ssh"
+	"golang.org/x/exp/slog"
 )
 
 type Server struct {

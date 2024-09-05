@@ -2,15 +2,17 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/nwtgck/handy-sshd"
-	"github.com/nwtgck/handy-sshd/version"
-	"github.com/spf13/cobra"
-	"golang.org/x/crypto/ssh"
-	"golang.org/x/exp/slog"
 	"net"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/John-Ao/go-sshd/server"
+	"github.com/John-Ao/go-sshd/version"
+
+	"github.com/spf13/cobra"
+	"golang.org/x/crypto/ssh"
+	"golang.org/x/exp/slog"
 )
 
 type flagType struct {
@@ -56,14 +58,14 @@ func RootCmd() *cobra.Command {
 	}
 	rootCmd := cobra.Command{
 		Use:          os.Args[0],
-		Short:        "handy-sshd",
+		Short:        "go-sshd",
 		Long:         "Portable SSH server",
 		SilenceUsage: true,
 		Example: `# Listen on 2222 and accept user name "john" with password "mypass"
-handy-sshd -u john:mypass
+./go-sshd -u john:mypass
 
 # Listen on 22 and accept the user without password
-handy-sshd -p 22 -u john:
+./go-sshd -p 22 -u john:
 
 Permissions:
 All permissions are allowed by default.
@@ -72,15 +74,18 @@ For example, specifying --allow-direct-tcpip and --allow-execute allows only the
 			return rootRunEWithExtra(cmd, args, &flag, allPermissionFlags)
 		},
 	}
-
+	port, err := strconv.Atoi(os.Getenv("PORT"))
+	if err != nil {
+		port = 2222
+	}
 	rootCmd.PersistentFlags().BoolVarP(&flag.showsVersion, "version", "v", false, "show version")
 	rootCmd.PersistentFlags().StringVarP(&flag.sshHost, "host", "", "", "SSH server host to listen (e.g. 127.0.0.1)")
-	rootCmd.PersistentFlags().Uint16VarP(&flag.sshPort, "port", "p", 2222, "port to listen")
+	rootCmd.PersistentFlags().Uint16VarP(&flag.sshPort, "port", "p", uint16(port), "port to listen")
 	// NOTE: long name 'unix-socket' is from curl (ref: https://curl.se/docs/manpage.html)
 	rootCmd.PersistentFlags().StringVarP(&flag.sshUnixSocket, "unix-socket", "", "", "Unix domain socket to listen")
-	rootCmd.PersistentFlags().StringVarP(&flag.sshShell, "shell", "", "", "Shell")
+	rootCmd.PersistentFlags().StringVarP(&flag.sshShell, "shell", "", os.Getenv("SHELL"), "Shell")
 	//rootCmd.PersistentFlags().StringVar(&flag.dnsServer, "dns-server", "", "DNS server (e.g. 1.1.1.1:53)")
-	rootCmd.PersistentFlags().StringArrayVarP(&flag.sshUsers, "user", "u", nil, `SSH user name (e.g. "john:mypass")`)
+	rootCmd.PersistentFlags().StringArrayVarP(&flag.sshUsers, "user", "u", []string{os.Getenv("USER_PASS")}, `SSH user name (e.g. "john:mypass")`)
 
 	// Permission flags
 	rootCmd.PersistentFlags().BoolVarP(&flag.allowTcpipForward, "allow-tcpip-forward", "", false, "client can use remote forwarding (ssh -R)")
@@ -113,7 +118,7 @@ func rootRunEWithExtra(cmd *cobra.Command, args []string, flag *flagType, allPer
 		}
 	}
 
-	sshServer := &handy_sshd.Server{
+	sshServer := &server.Server{
 		Logger:                  logger,
 		AllowTcpipForward:       flag.allowTcpipForward,
 		AllowDirectTcpip:        flag.allowDirectTcpip,

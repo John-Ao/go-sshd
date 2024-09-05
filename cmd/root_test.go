@@ -3,12 +3,14 @@ package cmd
 import (
 	"bytes"
 	"context"
-	"github.com/nwtgck/handy-sshd/version"
-	"github.com/stretchr/testify/assert"
-	"golang.org/x/crypto/ssh"
 	"net"
 	"strconv"
 	"testing"
+
+	"github.com/John-Ao/go-sshd/version"
+
+	"github.com/stretchr/testify/assert"
+	"golang.org/x/crypto/ssh"
 )
 
 func TestVersion(t *testing.T) {

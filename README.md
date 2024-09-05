@@ -1,43 +1,32 @@
-# handy-sshd
-[![CI](https://github.com/nwtgck/handy-sshd/actions/workflows/ci.yml/badge.svg)](https://github.com/nwtgck/handy-sshd/actions/workflows/ci.yml)
+# go-sshd
 
-Portable SSH Server
+Portable SSH Server in Go
 
-## Install on Ubuntu/Debian
-
+## Build
 ```bash
-wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.2/handy-sshd-0.4.2-linux-amd64.deb
-sudo dpkg -i handy-sshd-0.4.2-linux-amd64.deb 
+go build -tags osusergo,netgo # static
 ```
-
-## Install on Mac
-
-```bash
-brew install nwtgck/handy-sshd/handy-sshd
-```
-
-Get more executables in [the releases](https://github.com/nwtgck/handy-sshd/releases).
 
 ## Examples
 
 ```bash
 # Listen on 2222 and accept user name "john" with password "mypass"
-handy-sshd -p 2222 -u john:mypass
+./go-sshd -p 2222 -u john:mypass
 ```
 
 ```bash
 # Listen on 2222 and accept user name "john" without password
-handy-sshd -p 2222 -u john:
+./go-sshd -p 2222 -u john:
 ```
 
 ```bash
 # Listen on 2222 and accept users "john" and "alice" without password
-handy-sshd -p 2222 -u john: -u alice:
+./go-sshd -p 2222 -u john: -u alice:
 ```
 
 ```bash
 # Listen on unix domain socket
-handy-sshd --unix-socket /tmp/my-unix-socket -u john:
+./go-sshd --unix-socket /tmp/my-unix-socket -u john:
 ```
 
 ## Features
@@ -64,7 +53,7 @@ There are several permissions:
 **All permissions are allowed when nothing is specified.** The log shows "allowed: " and "NOT allowed: " permissions as follows:
 
 ```console
-$ handy-sshd -u "john:"
+$ ./go-sshd -u "john:"
 2023/08/11 11:40:44 INFO listening on :2222...
 2023/08/11 11:40:44 INFO allowed: "tcpip-forward", "direct-tcpip", "execute", "sftp", "streamlocal-forward", "direct-streamlocal"
 2023/08/11 11:40:44 INFO NOT allowed: none
@@ -73,7 +62,7 @@ $ handy-sshd -u "john:"
 For example, specifying `--allow-direct-tcpip` and `--allow-execute` allows only them:
 
 ```console
-$ handy-sshd -u "john:" --allow-direct-tcpip --allow-execute
+$ ./go-sshd -u "john:" --allow-direct-tcpip --allow-execute
 2023/08/11 11:41:03 INFO listening on :2222...
 2023/08/11 11:41:03 INFO allowed: "direct-tcpip", "execute"
 2023/08/11 11:41:03 INFO NOT allowed: "tcpip-forward", "sftp", "streamlocal-forward", "direct-streamlocal"
@@ -85,14 +74,14 @@ $ handy-sshd -u "john:" --allow-direct-tcpip --allow-execute
 Portable SSH server
 
 Usage:
-  handy-sshd [flags]
+  ./go-sshd [flags]
 
 Examples:
 # Listen on 2222 and accept user name "john" with password "mypass"
-handy-sshd -u john:mypass
+./go-sshd -u john:mypass
 
 # Listen on 22 and accept the user without password
-handy-sshd -p 22 -u john:
+./go-sshd -p 22 -u john:
 
 Permissions:
 All permissions are allowed by default.
@@ -105,7 +94,7 @@ Flags:
       --allow-sftp                  client can use SFTP and SSHFS
       --allow-streamlocal-forward   client can use Unix domain socket remote forwarding (ssh -R)
       --allow-tcpip-forward         client can use remote forwarding (ssh -R)
-  -h, --help                        help for handy-sshd
+  -h, --help                        help for go-sshd
       --host string                 SSH server host to listen (e.g. 127.0.0.1)
   -p, --port uint16                 port to listen (default 2222)
       --shell string                Shell

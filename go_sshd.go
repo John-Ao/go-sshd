@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/nwtgck/handy-sshd/cmd"
 	"os"
+
+	"github.com/John-Ao/go-sshd/cmd"
 )
 
 func main() {

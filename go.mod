@@ -1,4 +1,4 @@
-module github.com/nwtgck/handy-sshd
+module github.com/John-Ao/go-sshd
 
 go 1.20
 

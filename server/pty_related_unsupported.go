@@ -1,12 +1,13 @@
 //go:build windows
 // +build windows
 
-package handy_sshd
+package server
 
 import (
 	"fmt"
-	"golang.org/x/crypto/ssh"
 	"os"
+
+	"golang.org/x/crypto/ssh"
 )
 
 func (s *Server) createPty(shell string, connection ssh.Channel) (*os.File, error) {
